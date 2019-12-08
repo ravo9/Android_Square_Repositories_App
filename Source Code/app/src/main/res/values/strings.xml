@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">Square Repositories App</string>
+
+    <string name="loading_items">Loading repositories…</string>
+    <string name="network_problem_check_internet_connection">Network problem. Check Internet connection please.</string>
+    <string name="try_again">Try again</string>
+
+</resources>
