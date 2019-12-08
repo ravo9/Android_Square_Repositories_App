@@ -11,7 +11,7 @@ class FeedViewModel @Inject constructor(private val repositoriesRepository: Repo
     : ViewModel(), LifecycleObserver {
 
     fun getAllRepositories(): LiveData<List<RepositoryDatabaseEntity>>? {
-        return repositoriesRepository.getAllRepositories()
+        return repositoriesRepository.getAllRepositories(true)
     }
 
     fun getNetworkError(): LiveData<Boolean>? {

@@ -81,12 +81,18 @@ class FeedActivity : AppCompatActivity() {
             // If no repositories have been cached
             if (repositoriesListAdapter.itemCount == 0) {
 
+                // Stop the loading progress bar (circle)
+                progressBar.visibility = View.INVISIBLE
+
                 // Display "Try Again" button
                 tryagain_button.visibility = View.VISIBLE
 
-                // Setup onClick listener that reset repositories data subscription
+                // Setup onClick listener that resets repositories data subscription
                 tryagain_button.setOnClickListener {
                     refreshRepositoriesSubscription()
+
+                    // Re-display the loading progress bar (circle)
+                    progressBar.visibility = View.VISIBLE
                 }
             }
 

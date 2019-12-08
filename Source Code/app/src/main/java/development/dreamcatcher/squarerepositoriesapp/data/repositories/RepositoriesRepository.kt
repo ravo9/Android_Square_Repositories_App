@@ -15,8 +15,10 @@ class RepositoriesRepository @Inject constructor(private val repositoriesNetwork
         return databaseInteractor.getSingleSavedRepositoryById(id)
     }
 
-    fun getAllRepositories(): LiveData<List<RepositoryDatabaseEntity>>? {
-        updateDataFromBackEnd()
+    fun getAllRepositories(backendUpdateRequired: Boolean): LiveData<List<RepositoryDatabaseEntity>>? {
+        if (backendUpdateRequired) {
+            updateDataFromBackEnd()
+        }
         return databaseInteractor.getAllRepositories()
     }
 

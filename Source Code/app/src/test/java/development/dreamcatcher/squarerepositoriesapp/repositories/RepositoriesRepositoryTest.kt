@@ -2,12 +2,11 @@ package development.dreamcatcher.squarerepositoriesapp.repositories
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import development.dreamcatcher.squarerepositoriesapp.data.database.RepositoryDatabaseEntity
 import development.dreamcatcher.squarerepositoriesapp.data.database.RepositoriesDatabaseInteractor
-import development.dreamcatcher.squarerepositoriesapp.data.network.ApiResponse
+import development.dreamcatcher.squarerepositoriesapp.data.database.RepositoryDatabaseEntity
 import development.dreamcatcher.squarerepositoriesapp.data.network.RepositoriesNetworkInteractor
+import development.dreamcatcher.squarerepositoriesapp.data.network.RepositoryGsonObject
 import development.dreamcatcher.squarerepositoriesapp.data.repositories.RepositoriesRepository
-import io.reactivex.Observable
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -17,12 +16,11 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 
-
 class RepositoriesRepositoryTest {
 
     private var repositoriesRepository: RepositoriesRepository? = null
     private var fakeRepositoryDatabaseEntity: RepositoryDatabaseEntity? = null
-    private var fakeArticleEntitiesList = ArrayList<RepositoryDatabaseEntity>()
+    private var fakeRepositoryEntitiesList = ArrayList<RepositoryDatabaseEntity>()
 
     @Mock
     private val repositoriesDatabaseInteractor: RepositoriesDatabaseInteractor? = null
@@ -43,59 +41,58 @@ class RepositoriesRepositoryTest {
         repositoriesRepository = RepositoriesRepository(repositoriesNetworkInteractor!!, repositoriesDatabaseInteractor!!)
 
         // Prepare fake data
-        val contentId = "fake/Article/Id"
-        val title = "Fake Article Title"
-        val summary = "Sport"
-        val contentUrl = "http://google.com"
-        val thumbnailUrl = "http://google.com/picture.jpg"
+        val id = "fake/repository/id"
+        val name = "Fake Repository Name"
+        val description = "Fake description..."
+        val htmlUrl = "http://google.com"
 
-        // Prepare fake Article Entity (DB object)
-        fakeRepositoryDatabaseEntity = RepositoryDatabaseEntity(contentId, title, summary, contentUrl, thumbnailUrl)
+        // Prepare fake sub-objects
+        val login = "John Owner"
+        val avatarUrl = "http://google.com/picture.jpg"
+        val owner = RepositoryGsonObject.Owner(login, avatarUrl)
 
-        // Prepare fake Articles Entities List
-        fakeArticleEntitiesList.add(fakeRepositoryDatabaseEntity!!)
+        // Prepare fake Repository Entity (DB object)
+        fakeRepositoryDatabaseEntity = RepositoryDatabaseEntity(id, name, description, owner.login!!, owner.avatarUrl, htmlUrl)
+
+        // Prepare fake Repositories Entities List
+        fakeRepositoryEntitiesList.add(fakeRepositoryDatabaseEntity!!)
     }
 
     @Test
-    fun fetchAllArticlesByArticlesRepository() {
+    fun fetchAllRepositoriesByRepositoriesRepository() {
 
         // Prepare LiveData structure
-        val articleEntityLiveData = MutableLiveData<List<RepositoryDatabaseEntity>>()
-        articleEntityLiveData.setValue(fakeArticleEntitiesList);
-
-        // Prepare fake empty list for backend call
-        val fakeList = ArrayList<ApiResponse.Article>()
-        val fakeNetworkCallResult = Result.success(fakeList)
+        val repositoryEntityLiveData = MutableLiveData<List<RepositoryDatabaseEntity>>()
+        repositoryEntityLiveData.setValue(fakeRepositoryEntitiesList);
 
         // Set testing conditions
-        Mockito.`when`(repositoriesDatabaseInteractor?.getAllArticles()).thenReturn(articleEntityLiveData)
-        Mockito.`when`(repositoriesNetworkInteractor?.getAllArticles()).thenReturn(Observable.just(fakeNetworkCallResult))
+        Mockito.`when`(repositoriesDatabaseInteractor?.getAllRepositories()).thenReturn(repositoryEntityLiveData)
 
         // Perform the action
-        val storedArticles = repositoriesRepository?.getAllArticles()
+        val storedRepositories = repositoriesRepository?.getAllRepositories(false)
 
         // Check results
-        Assert.assertSame(articleEntityLiveData, storedArticles);
+        Assert.assertSame(repositoryEntityLiveData, storedRepositories);
     }
 
     @Test
-    fun fetchArticleByArticlesRepository() {
+    fun fetchRepositoryByRepositoriesRepository() {
 
         // Prepare LiveData structure
-        val articleEntityLiveData = MutableLiveData<RepositoryDatabaseEntity>()
-        articleEntityLiveData.setValue(fakeRepositoryDatabaseEntity);
+        val repositoryEntityLiveData = MutableLiveData<RepositoryDatabaseEntity>()
+        repositoryEntityLiveData.setValue(fakeRepositoryDatabaseEntity);
 
-        // Prepare fake article id
-        val fakeArticleId = "fake/article/id"
+        // Prepare fake repository id
+        val fakeRepositoryId = "1231231"
 
         // Set testing conditions
-        Mockito.`when`(repositoriesDatabaseInteractor?.getSingleSavedArticleById(fakeArticleId))
-            .thenReturn(articleEntityLiveData)
+        Mockito.`when`(repositoriesDatabaseInteractor?.getSingleSavedRepositoryById(fakeRepositoryId))
+            .thenReturn(repositoryEntityLiveData)
 
         // Perform the action
-        val storedArticle = repositoriesRepository?.getSingleSavedArticleById(fakeArticleId)
+        val storedRepository = repositoriesRepository?.getSingleSavedRepositoryById(fakeRepositoryId)
 
         // Check results
-        Assert.assertSame(articleEntityLiveData, storedArticle);
+        Assert.assertSame(repositoryEntityLiveData, storedRepository);
     }
 }

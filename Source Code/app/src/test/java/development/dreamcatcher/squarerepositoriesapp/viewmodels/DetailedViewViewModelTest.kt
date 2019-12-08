@@ -3,6 +3,7 @@ package development.dreamcatcher.squarerepositoriesapp.viewmodels
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import development.dreamcatcher.squarerepositoriesapp.data.database.RepositoryDatabaseEntity
+import development.dreamcatcher.squarerepositoriesapp.data.network.RepositoryGsonObject
 import development.dreamcatcher.squarerepositoriesapp.data.repositories.RepositoriesRepository
 import development.dreamcatcher.squarerepositoriesapp.features.detailedView.DetailedViewViewModel
 import org.junit.Assert
@@ -35,33 +36,37 @@ class DetailedViewViewModelTest {
         viewModel = DetailedViewViewModel(repositoriesRepository!!)
 
         // Prepare fake data
-        val contentId = "fake/Article/Id"
-        val title = "Fake Article Title"
-        val summary = "Sport"
-        val contentUrl = "http://google.com"
-        val thumbnailUrl = "http://google.com/picture.jpg"
+        val id = "31231"
+        val name = "Fake Repository Name"
+        val description = "Fake description..."
+        val htmlUrl = "http://google.com"
 
-        // Prepare fake Article Entity (DB object)
-        fakeRepositoryDatabaseEntity = RepositoryDatabaseEntity(contentId, title, summary, contentUrl, thumbnailUrl)
+        // Prepare fake sub-objects
+        val login = "John Owner"
+        val avatarUrl = "http://google.com/picture.jpg"
+        val owner = RepositoryGsonObject.Owner(login, avatarUrl)
+        
+        // Prepare fake Repository Entity (DB object)
+        fakeRepositoryDatabaseEntity = RepositoryDatabaseEntity(id, name, description, owner.login!!, owner.avatarUrl, htmlUrl)
     }
 
     @Test
-    fun fetchArticleByFeedViewModel() {
+    fun fetchRepositoryByFeedViewModel() {
 
         // Prepare LiveData structure
-        val articleEntityLiveData = MutableLiveData<RepositoryDatabaseEntity>()
-        articleEntityLiveData.setValue(fakeRepositoryDatabaseEntity);
+        val repositoryEntityLiveData = MutableLiveData<RepositoryDatabaseEntity>()
+        repositoryEntityLiveData.setValue(fakeRepositoryDatabaseEntity);
 
-        // Prepare fake article id
-        val fakeArticleId = "fake/article/id"
+        // Prepare fake repository id
+        val fakeRepositoryId = "fake/repository/id"
 
         // Set testing conditions
-        Mockito.`when`(repositoriesRepository?.getSingleSavedArticleById(fakeArticleId)).thenReturn(articleEntityLiveData)
+        Mockito.`when`(repositoriesRepository?.getSingleSavedRepositoryById(fakeRepositoryId)).thenReturn(repositoryEntityLiveData)
 
         // Perform the action
-        val storedArticles = viewModel?.getSingleSavedArticleById(fakeArticleId)
+        val storedRepositories = viewModel?.getSingleSavedRepositoryById(fakeRepositoryId)
 
         // Check results
-        Assert.assertSame(articleEntityLiveData, storedArticles);
+        Assert.assertSame(repositoryEntityLiveData, storedRepositories);
     }
 }

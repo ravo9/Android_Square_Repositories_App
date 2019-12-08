@@ -29,7 +29,7 @@ public class FeedViewTest {
     @Test
     public void clickOnListedArticle_opensDetailedView() throws Exception {
 
-        // Click on the first article.
+        // Click on the first repository.
         onView(withId(R.id.recyclerView_repositories))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
@@ -40,7 +40,7 @@ public class FeedViewTest {
     @Test
     public void clickOnCrossButton_closesDetailedView() throws Exception {
 
-        // Click on the first article.
+        // Click on the first repository.
         onView(withId(R.id.recyclerView_repositories))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 

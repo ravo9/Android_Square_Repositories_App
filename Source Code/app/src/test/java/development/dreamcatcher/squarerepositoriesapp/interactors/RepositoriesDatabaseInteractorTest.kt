@@ -6,7 +6,7 @@ import development.dreamcatcher.squarerepositoriesapp.data.database.RepositoryDa
 import development.dreamcatcher.squarerepositoriesapp.data.database.RepositoriesDao
 import development.dreamcatcher.squarerepositoriesapp.data.database.RepositoriesDatabase
 import development.dreamcatcher.squarerepositoriesapp.data.database.RepositoriesDatabaseInteractor
-import development.dreamcatcher.squarerepositoriesapp.data.network.ApiResponse
+import development.dreamcatcher.squarerepositoriesapp.data.network.RepositoryGsonObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -20,7 +20,7 @@ import org.mockito.MockitoAnnotations
 class RepositoriesDatabaseInteractorTest {
 
     private var repositoriesDatabaseInteractor: RepositoriesDatabaseInteractor? = null
-    private var fakeArticle: ApiResponse.Article? = null
+    private var fakeRepositoryGsonObject: RepositoryGsonObject? = null
     private var fakeRepositoryDatabaseEntity: RepositoryDatabaseEntity? = null
 
     @Mock
@@ -42,48 +42,48 @@ class RepositoriesDatabaseInteractorTest {
         repositoriesDatabaseInteractor = RepositoriesDatabaseInteractor(repositoriesDatabase!!)
 
         // Prepare fake data
-        val contentId = "fake/Article/Id"
-        val title = "Fake Article Title"
-        val summary = "Sport"
-        val contentUrl = "http://google.com"
-        val thumbnailUrl = "http://google.com/picture.jpg"
+        val id = "fake/repository/id"
+        val name = "Fake Repository Name"
+        val description = "Fake description..."
+        val htmlUrl = "http://google.com"
 
         // Prepare fake sub-objects
-        val mainImageThumbnailSubObject = ApiResponse.MainImageThumbnail(thumbnailUrl)
-        val imagesObjectSubObject = ApiResponse.Images(mainImageThumbnailSubObject)
+        val login = "John Owner"
+        val avatarUrl = "http://google.com/picture.jpg"
+        val owner = RepositoryGsonObject.Owner(login, avatarUrl)
 
-        // Prepare fake Article (API object)
-        fakeArticle = ApiResponse.Article(contentId, title, summary, contentUrl, imagesObjectSubObject)
+        // Prepare fake Gson (API) object
+        fakeRepositoryGsonObject = RepositoryGsonObject(id, name, description, owner, htmlUrl)
 
-        // Prepare fake Article Entity (DB object)
-        fakeRepositoryDatabaseEntity = RepositoryDatabaseEntity(contentId, title, summary, contentUrl, thumbnailUrl)
+        // Prepare fake Repository Entity (DB object)
+        fakeRepositoryDatabaseEntity = RepositoryDatabaseEntity(id, name, description, owner.login!!, owner.avatarUrl, htmlUrl)
     }
 
     @Test
-    fun saveArticleByDatabaseInteractor() {
+    fun saveRepositoryByDatabaseInteractor() {
 
         // Perform the action
-        val resultStatus = repositoriesDatabaseInteractor!!.addNewRepository(fakeArticle).value
+        val resultStatus = repositoriesDatabaseInteractor!!.addNewRepository(fakeRepositoryGsonObject).value
 
         // Check results
         Assert.assertTrue(resultStatus!!)
     }
 
     @Test
-    fun fetchArticleByDatabaseInteractor() {
+    fun fetchRepositoryByDatabaseInteractor() {
 
         // Prepare LiveData structure
-        val articleEntityLiveData = MutableLiveData<RepositoryDatabaseEntity>()
-        articleEntityLiveData.setValue(fakeRepositoryDatabaseEntity);
+        val repositoryEntityLiveData = MutableLiveData<RepositoryDatabaseEntity>()
+        repositoryEntityLiveData.setValue(fakeRepositoryDatabaseEntity);
 
         // Set testing conditions
         Mockito.`when`(repositoriesDatabase?.getRepositoriesDao()).thenReturn(repositoriesDao)
-        Mockito.`when`(repositoriesDao?.getSingleSavedRepositoryById(anyString())).thenReturn(articleEntityLiveData)
+        Mockito.`when`(repositoriesDao?.getSingleSavedRepositoryById(anyString())).thenReturn(repositoryEntityLiveData)
 
         // Perform the action
-        val storedArticle = repositoriesDatabaseInteractor?.getSingleSavedArticleById("fake-article-id")
+        val storedRepository = repositoriesDatabaseInteractor?.getSingleSavedRepositoryById("fake-repository-id")
 
         // Check results
-        Assert.assertSame(articleEntityLiveData, storedArticle);
+        Assert.assertSame(repositoryEntityLiveData, storedRepository);
     }
 }

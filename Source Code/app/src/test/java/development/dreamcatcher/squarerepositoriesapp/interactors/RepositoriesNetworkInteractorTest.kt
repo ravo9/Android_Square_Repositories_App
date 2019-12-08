@@ -2,8 +2,8 @@ package development.dreamcatcher.squarerepositoriesapp.interactors
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import development.dreamcatcher.squarerepositoriesapp.data.network.ApiClient
-import development.dreamcatcher.squarerepositoriesapp.data.network.ApiResponse
 import development.dreamcatcher.squarerepositoriesapp.data.network.RepositoriesNetworkInteractor
+import development.dreamcatcher.squarerepositoriesapp.data.network.RepositoryGsonObject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.TestRule
@@ -13,7 +13,7 @@ import org.mockito.MockitoAnnotations
 class RepositoriesNetworkInteractorTest {
 
     private var repositoriesNetworkInteractor: RepositoriesNetworkInteractor? = null
-    private val fakeApiResponse: ApiResponse = ApiResponse()
+    private var fakeRepositoryGsonObject: RepositoryGsonObject? = null
 
     @Mock
     private val apiClient: ApiClient? = null
@@ -31,20 +31,17 @@ class RepositoriesNetworkInteractorTest {
         repositoriesNetworkInteractor = RepositoriesNetworkInteractor(apiClient!!)
 
         // Prepare fake data
-        val contentId = "fake/Article/Id"
-        val title = "Fake Article Title"
-        val summary = "Sport"
-        val contentUrl = "http://google.com"
-        val thumbnailUrl = "http://google.com/picture.jpg"
+        val id = "fake/repository/id"
+        val name = "Fake Repository Name"
+        val description = "Fake description..."
+        val htmlUrl = "http://google.com"
 
-        // Prepare fake sub-object
-        val mainImageThumbnailSubObject = ApiResponse.MainImageThumbnail(thumbnailUrl)
-        val imagesObjectSubObject = ApiResponse.Images(mainImageThumbnailSubObject)
-        val fakeArticle = ApiResponse.Article(contentId, title, summary, contentUrl, imagesObjectSubObject)
-        val fakeArticlesList = ArrayList<ApiResponse.Article>()
-        fakeArticlesList.add(fakeArticle)
+        // Prepare fake sub-objects
+        val login = "John Owner"
+        val avatarUrl = "http://google.com/picture.jpg"
+        val owner = RepositoryGsonObject.Owner(login, avatarUrl)
 
-        // Prepare fake ApiResponse
-        fakeApiResponse.content = fakeArticlesList
+        // Prepare fake Gson (API) object
+        fakeRepositoryGsonObject = RepositoryGsonObject(id, name, description, owner, htmlUrl)
     }
 }
