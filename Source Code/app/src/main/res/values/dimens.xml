@@ -20,15 +20,6 @@
     <dimen name="repositories_list_row_thumbnail_length">100dp</dimen>
     <dimen name="repositories_list_row_text_size_main">12sp</dimen>
 
-    <dimen name="repositories_viewpager_height">200dp</dimen>
-
-    <dimen name="repositories_viewpager_item_width">200dp</dimen>
-    <dimen name="repositories_viewpager_item_height">100dp</dimen>
-    <dimen name="repositories_viewpager_item_padding">15dp</dimen>
-    <dimen name="repositories_viewpager_item_margin_bottom">15dp</dimen>
-    <dimen name="repositories_viewpager_item_elevation">2dp</dimen>
-    <dimen name="repositories_viewpager_item_text_size_main">14sp</dimen>
-
     <dimen name="feed_view_padding_vertical">15dp</dimen>
 
     <dimen name="detailed_repository_view_elevation">10dp</dimen>

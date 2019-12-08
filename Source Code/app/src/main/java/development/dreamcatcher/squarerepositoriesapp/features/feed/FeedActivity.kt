@@ -54,9 +54,9 @@ class FeedActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         val layoutManager = LinearLayoutManager(this)
         recyclerView_repositories.layoutManager = layoutManager
-        repositoriesListAdapter = RepositoriesListAdapter(this,
-            { repositoryId: String -> displayDetailedView(repositoryId) }
-        )
+        repositoriesListAdapter = RepositoriesListAdapter{
+                repositoryId: String -> displayDetailedView(repositoryId)
+        }
         recyclerView_repositories.adapter = repositoriesListAdapter
     }
 

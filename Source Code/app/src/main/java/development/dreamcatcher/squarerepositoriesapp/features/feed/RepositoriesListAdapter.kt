@@ -1,6 +1,5 @@
 package development.dreamcatcher.squarerepositoriesapp.features.feed
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import development.dreamcatcher.squarerepositoriesapp.data.database.RepositoryDa
 import kotlinx.android.synthetic.main.main_feed_list_row.view.*
 
 // Main adapter used for managing repositories list within the main Recycler (List) View
-class RepositoriesListAdapter (val context: Context, val clickListener: (String) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
+class RepositoriesListAdapter (val clickListener: (String) -> Unit) : RecyclerView.Adapter<ViewHolder>() {
 
     private var repositoriesList: List<RepositoryDatabaseEntity> = ArrayList()
 
@@ -43,7 +42,7 @@ class RepositoriesListAdapter (val context: Context, val clickListener: (String)
 
         // Load thumbnail
         if (avatarUrl != null) {
-            Picasso.with(context).load(avatarUrl).into(holder.avatar)
+            Picasso.get().load(avatarUrl).into(holder.avatar)
         }
 
         // Set onClickListener
