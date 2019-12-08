@@ -22,7 +22,7 @@ public class FeedViewTest {
             new ActivityTestRule<>(FeedActivity.class);
 
     @Test
-    public void clickOnListedArticle_opensDetailedView() throws Exception {
+    public void clickOnListedItem_opensDetailedView() throws Exception {
 
         // Click on the first repository.
         onView(withId(R.id.recyclerView_repositories))
