@@ -55,13 +55,13 @@
             app:layout_constraintStart_toEndOf="@id/avatar_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textView_name"
-            app:layout_constraintBottom_toTopOf="@id/textView_publicationDate"/>
+            app:layout_constraintBottom_toTopOf="@id/textView_owner"/>
 
     <TextView
-            android:id="@+id/textView_publicationDate"
+            android:id="@+id/textView_owner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
+            android:textAlignment="viewEnd"
             android:textSize="@dimen/repositories_list_row_text_size_main"
             android:layout_marginStart="@dimen/repositories_list_row_internal_spacing"
             android:layout_marginTop="@dimen/repositories_list_row_internal_spacing"

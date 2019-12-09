@@ -34,11 +34,13 @@ class RepositoriesListAdapter (val clickListener: (String) -> Unit) : RecyclerVi
         // Prepare fetched data
         val name = repositoriesList[position].name
         val description = repositoriesList[position].description
+        val owner = repositoriesList[position].owner
         val avatarUrl = repositoriesList[position].avatarUrl
 
         // Set data within the holder
         holder.name.text = name
         holder.description.text = description
+        holder.owner.text = (holder.itemView.context).getString(R.string.owner, owner)
 
         // Load thumbnail
         if (avatarUrl != null) {
@@ -56,6 +58,7 @@ class RepositoriesListAdapter (val clickListener: (String) -> Unit) : RecyclerVi
 class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     val name = view.textView_name
     val description = view.textView_description
+    val owner = view.textView_owner
     val avatar = view.imageView_avatar
     val rowContainer = view.row_container
 }
