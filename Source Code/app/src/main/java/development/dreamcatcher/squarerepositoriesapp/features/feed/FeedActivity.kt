@@ -25,6 +25,9 @@ class FeedActivity : AppCompatActivity() {
     private lateinit var viewModel: FeedViewModel
     private lateinit var repositoriesListAdapter: RepositoriesListAdapter
 
+    private val STATE_LOADING_ERROR = "STATE_LOADING_ERROR"
+    private val STATE_CONTENT_LOADED = "STATE_CONTENT_LOADED"
+
     init {
         SquareRepositoriesApp.mainComponent.inject(this)
     }
@@ -44,11 +47,6 @@ class FeedActivity : AppCompatActivity() {
 
         // Catch and handle potential network issues
         subscribeForNetworkError()
-
-        // Setup refresh button
-        btn_refresh.setOnClickListener{
-            refreshRepositoriesSubscription()
-        }
     }
 
     private fun setupRecyclerView() {
@@ -64,9 +62,7 @@ class FeedActivity : AppCompatActivity() {
         viewModel.getAllRepositories()?.observe(this, Observer<List<RepositoryDatabaseEntity>> {
 
             if (!it.isNullOrEmpty()) {
-
-                // Hide the loading view
-                showLoadingView(false)
+                setViewState(STATE_CONTENT_LOADED)
 
                 // Display fetched repositories
                 repositoriesListAdapter.setRepositories(it)
@@ -80,20 +76,7 @@ class FeedActivity : AppCompatActivity() {
             // In case of Network Error...
             // If no repositories have been cached
             if (repositoriesListAdapter.itemCount == 0) {
-
-                // Stop the loading progress bar (circle)
-                progressBar.visibility = View.INVISIBLE
-
-                // Display "Try Again" button
-                tryagain_button.visibility = View.VISIBLE
-
-                // Setup onClick listener that resets repositories data subscription
-                tryagain_button.setOnClickListener {
-                    refreshRepositoriesSubscription()
-
-                    // Re-display the loading progress bar (circle)
-                    progressBar.visibility = View.VISIBLE
-                }
+                setViewState(STATE_LOADING_ERROR)
             }
 
             // Display error message to the user
@@ -120,13 +103,37 @@ class FeedActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun showLoadingView(loadingState: Boolean) {
-        if (loadingState) {
-            loading_container.visibility = View.VISIBLE
-            appbar_container.visibility = View.GONE
-        } else {
-            loading_container.visibility = View.GONE
-            appbar_container.visibility = View.VISIBLE
+    private fun setViewState(state: String) {
+        when(state) {
+            STATE_LOADING_ERROR -> setupLoadingErrorView()
+            STATE_CONTENT_LOADED -> setupContentLoadedView()
+        }
+    }
+
+    private fun setupLoadingErrorView() {
+        // Stop the loading progress bar (circle)
+        progressBar.visibility = View.INVISIBLE
+
+        // Display "Try Again" button
+        tryagain_button.visibility = View.VISIBLE
+
+        // Setup onClick listener that resets repositories data subscription
+        tryagain_button.setOnClickListener {
+            refreshRepositoriesSubscription()
+
+            // Re-display the loading progress bar (circle)
+            progressBar.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setupContentLoadedView() {
+        // Hide the loading view
+        loading_container.visibility = View.GONE
+        appbar_container.visibility = View.VISIBLE
+
+        // Setup refresh button
+        btn_refresh.setOnClickListener{
+            refreshRepositoriesSubscription()
         }
     }
 }
